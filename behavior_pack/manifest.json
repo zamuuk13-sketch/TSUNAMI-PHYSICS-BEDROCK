@@ -1,0 +1,18 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Tsunami Physics | Behavior",
+    "description": "Core behavior and Script API foundation for Tsunami Physics.",
+    "uuid": "4c2b5c6e-6f2d-4c3d-9c7d-1b8a7a6d1101",
+    "version": [0, 1, 0],
+    "min_engine_version": [1, 21, 100]
+  },
+  "modules": [
+    {"type":"data","uuid":"b2b6d9e4-7c91-4e6f-8f2d-2d9b6a0e1102","version":[0,1,0]},
+    {"type":"script","language":"javascript","entry":"scripts/main.js","uuid":"9a7f3e11-2b45-4d8c-a6f0-5c2e8b7d1103","version":[0,1,0]}
+  ],
+  "dependencies": [
+    {"uuid":"a8e4c2f7-3d61-4b9e-82a5-7f6c1d0b1104","version":[0,1,0]},
+    {"module_name":"@minecraft/server","version":"1.11.0"}
+  ]
+}
