@@ -28,3 +28,12 @@
 - Limites de processamento adicionados para controlar custo por atualização.
 - Stage 2 marcada como concluída após teste informado pelo usuário.
 - Stage 3 aguardando teste real no Bedrock.
+
+## 0.4.0 — Stage 4
+
+- Física básica do jogador na água adicionada.
+- Arrasto e corrente aplicados progressivamente.
+- Submersão detectada.
+- Flutuação vertical básica adicionada.
+- Stage 3 marcada como concluída após teste informado pelo usuário.
+- Stage 4 aguardando teste real no Bedrock.
