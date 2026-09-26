@@ -37,3 +37,13 @@
 - Flutuação vertical básica adicionada.
 - Stage 3 marcada como concluída após teste informado pelo usuário.
 - Stage 4 aguardando teste real no Bedrock.
+
+## 0.5.0 — Stage 5
+
+- Sistema inicial de detritos físicos adicionado.
+- Detritos usam entidades de item para persistência e transporte.
+- Massa e arrasto variam conforme o material.
+- Detritos recebem impulso inicial e corrente da água.
+- Limite de quantidade e geração progressiva adicionados.
+- Stage 4 marcada como concluída após teste informado pelo usuário.
+- Stage 5 aguardando teste real no Bedrock.
