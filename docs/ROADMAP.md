@@ -4,7 +4,7 @@
 |---|---|---|
 | 0 | Organização | 🟢 Concluída |
 | 1 | Fundação | 🟡 Implementada / aguardando teste |
-| 2 | Primeiro Tsunami | ⚪ |
+| 2 | Primeiro Tsunami | 🟡 Implementada / aguardando teste |
 | 3 | Água e Inundação | ⚪ |
 | 4 | Física do Jogador | ⚪ |
 | 5 | Detritos | ⚪ |
