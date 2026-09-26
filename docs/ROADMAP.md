@@ -2,8 +2,8 @@
 
 | Etapa | Nome | Status |
 |---|---|---|
-| 0 | Organização | 🟢 Atual |
-| 1 | Fundação | ⚪ |
+| 0 | Organização | 🟢 Concluída |
+| 1 | Fundação | 🟡 Implementada / aguardando teste |
 | 2 | Primeiro Tsunami | ⚪ |
 | 3 | Água e Inundação | ⚪ |
 | 4 | Física do Jogador | ⚪ |
