@@ -31,13 +31,13 @@ Fazer a água do tsunami afetar diretamente o movimento do jogador, introduzindo
 
 ## Critério de conclusão
 
-- [ ] Stage 3 continua funcionando;
-- [ ] Água nos pés altera o movimento;
-- [ ] Submersão altera o movimento de forma mais forte;
-- [ ] Corrente empurra o jogador;
-- [ ] Corrente possui limite de velocidade;
-- [ ] Existe flutuação vertical básica;
-- [ ] Não há erro de script durante o teste.
+- [x] Stage 3 continua funcionando;
+- [x] Água nos pés altera o movimento;
+- [x] Submersão altera o movimento de forma mais forte;
+- [x] Corrente empurra o jogador;
+- [x] Corrente possui limite de velocidade;
+- [x] Existe flutuação vertical básica;
+- [x] Não há erro de script durante o teste;
 
 ## Limitações intencionais
 
@@ -52,4 +52,4 @@ Ainda não há:
 
 ## Status
 
-🟡 Implementada — aguardando teste real no Bedrock.
+🟢 Concluída e testada no Bedrock.
