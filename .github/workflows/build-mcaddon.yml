@@ -1,0 +1,35 @@
+name: Build MCAddon
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "behavior_pack/**"
+      - "resource_pack/**"
+      - "config/**"
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package addon
+        run: |
+          mkdir -p dist
+          cd behavior_pack
+          zip -r ../dist/Tsunami-Physics-Behavior.mcpack . -x "*.git*"
+          cd ../resource_pack
+          zip -r ../dist/Tsunami-Physics-Resources.mcpack . -x "*.git*"
+          cd ..
+          rm -rf package
+          mkdir package
+          cp dist/*.mcpack package/
+          cd package
+          zip -r ../dist/Tsunami-Physics.mcaddon *.mcpack
+
+      - name: Upload MCAddon
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tsunami-Physics-mcaddon
+          path: dist/Tsunami-Physics.mcaddon
