@@ -14,5 +14,15 @@ export const TSUNAMI_CONFIG = {
     tickInterval: 2,
     baseOffset: -1,
     water: "minecraft:water"
+  },
+
+  stage3: {
+    terrainScanUp: 8,
+    terrainScanDown: 16,
+    floodDepth: 1,
+    floodSpreadRadius: 18,
+    maxFloodCellsPerTick: 90,
+    maxWaterBlocksPerTick: 240,
+    allowWaterReplace: true
   }
 };
