@@ -1,0 +1,7 @@
+{
+  "project":"Tsunami Physics",
+  "stage":1,
+  "enabled":true,
+  "debug":true,
+  "limits":{"maxActiveSectors":64,"maxActiveDebris":128}
+}
