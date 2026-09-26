@@ -1,6 +1,7 @@
 import { system } from "@minecraft/server";
 
 const ACTIVE = new Map();
+const PLAYER_STATE = new Map();
 
 const DEFAULTS = {
   startDistance: 36,
@@ -19,7 +20,21 @@ const DEFAULTS = {
   floodSpreadRadius: 18,
   maxFloodCellsPerTick: 90,
   maxWaterBlocksPerTick: 240,
-  allowWaterReplace: true
+  allowWaterReplace: true,
+
+  // Stage 4 — player water physics
+  playerPhysics: true,
+  swimLevel: 1,
+  wadeLevel: 2,
+  drag: 0.18,
+  strongCurrentDrag: 0.32,
+  currentPull: 0.055,
+  maxCurrentSpeed: 0.75,
+  verticalBuoyancy: 0.045,
+  surfaceRecovery: 0.12,
+  sprintPenalty: 0.35,
+  underwaterPenalty: 0.55,
+  physicsTickInterval: 1
 };
 
 function normalize(x, z) {
@@ -98,6 +113,68 @@ function findTerrainTopAt(dimension, x, z, startY, cfg) {
   }
 
   return undefined;
+}
+
+function getPlayerWaterState(player) {
+  const dim = player.dimension;
+  const x = Math.floor(player.location.x);
+  const y = Math.floor(player.location.y);
+  const z = Math.floor(player.location.z);
+  const feet = blockAt(dim, x, y, z);
+  const head = blockAt(dim, x, y + 1, z);
+  const feetWater = !!feet && feet.isLiquid && feet.typeId === "minecraft:water";
+  const headWater = !!head && head.isLiquid && head.typeId === "minecraft:water";
+  const level = headWater ? 3 : feetWater ? 1 : 0;
+  return { feetWater, headWater, level };
+}
+
+function applyPlayerPhysics(wave) {
+  if (!wave.player?.isValid || !wave.cfg.playerPhysics) return;
+  const player = wave.player;
+  const state = getPlayerWaterState(player);
+  const previous = PLAYER_STATE.get(player.id) || { level: 0 };
+  PLAYER_STATE.set(player.id, state);
+
+  if (state.level === 0) return;
+
+  const depth = state.headWater ? 2 : 1;
+  const cfg = wave.cfg;
+  const speedFactor = state.headWater ? cfg.underwaterPenalty : cfg.sprintPenalty;
+  const drag = state.headWater ? cfg.strongCurrentDrag : cfg.drag;
+
+  try {
+    const v = player.getVelocity();
+    const horizontal = Math.sqrt(v.x * v.x + v.z * v.z);
+    const currentX = wave.incoming.x * cfg.currentPull * depth;
+    const currentZ = wave.incoming.z * cfg.currentPull * depth;
+    const nextX = v.x * (1 - drag) + currentX;
+    const nextZ = v.z * (1 - drag) + currentZ;
+    const limited = Math.min(
+      cfg.maxCurrentSpeed,
+      Math.sqrt(nextX * nextX + nextZ * nextZ)
+    );
+
+    let vx = nextX;
+    let vz = nextZ;
+    if (limited > 0 && limited < Math.sqrt(nextX * nextX + nextZ * nextZ)) {
+      const n = Math.sqrt(nextX * nextX + nextZ * nextZ);
+      vx = nextX / n * limited;
+      vz = nextZ / n * limited;
+    }
+
+    const vy = v.y + cfg.verticalBuoyancy * (state.headWater ? 1.25 : 0.5);
+    player.applyImpulse({
+      x: (vx - v.x) * speedFactor,
+      y: Math.max(-0.08, Math.min(0.08, vy - v.y)),
+      z: (vz - v.z) * speedFactor
+    });
+
+    if (state.headWater && !previous.headWater) {
+      player.sendMessage("§b[Tsunami Physics] §fVocê foi submerso pela água.");
+    } else if (state.level === 1 && previous.level === 0) {
+      player.sendMessage("§b[Tsunami Physics] §fA água está dificultando seu movimento.");
+    }
+  } catch {}
 }
 
 function key(x, z) {
@@ -264,6 +341,7 @@ function updateWave(wave) {
   }
 
   processFlood(wave);
+  applyPlayerPhysics(wave);
 
   if (wave.tickCount % 10 === 0) {
     try {
@@ -344,6 +422,7 @@ function stopWave(wave) {
   }
 
   ACTIVE.delete(wave.id);
+  PLAYER_STATE.delete(wave.id);
 }
 
 export function stopTsunami(player) {
