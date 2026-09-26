@@ -1,4 +1,5 @@
 import { system } from "@minecraft/server";
+import { spawnDebris, updateDebris } from "./debris.js";
 
 const ACTIVE = new Map();
 const PLAYER_STATE = new Map();
@@ -34,7 +35,16 @@ const DEFAULTS = {
   surfaceRecovery: 0.12,
   sprintPenalty: 0.35,
   underwaterPenalty: 0.55,
-  physicsTickInterval: 1
+  physicsTickInterval: 1,
+
+  // Stage 5 — debris carried by the flood
+  debrisEnabled: true,
+  debrisSpawnInterval: 8,
+  maxActiveDebris: 32,
+  debrisCurrentForce: 0.08,
+  debrisMaxSpeed: 1.15,
+  debrisImpulseScale: 0.55,
+  debrisSpawnChance: 0.45
 };
 
 function normalize(x, z) {
@@ -128,7 +138,7 @@ function getPlayerWaterState(player) {
   return { feetWater, headWater, level };
 }
 
-function applyPlayerPhysics(wave) {
+function spawnWaveDebris(wave) {\n  const cfg = wave.cfg;\n  if (!cfg.debrisEnabled) return;\n  if (wave.tickCount % cfg.debrisSpawnInterval !== 0) return;\n  if (wave.debrisSpawned >= cfg.maxActiveDebris) return;\n\n  const centerX = wave.start.x + wave.incoming.x * wave.front;\n  const centerZ = wave.start.z + wave.incoming.z * wave.front;\n  const lateral = Math.floor((Math.random() - 0.5) * cfg.width);\n  const x = Math.floor(centerX + wave.side.x * lateral);\n  const z = Math.floor(centerZ + wave.side.z * lateral);\n  const terrainY = findTerrainTopAt(wave.dimension, x, z, wave.baseY + cfg.height, cfg);\n  if (terrainY === undefined || Math.random() > cfg.debrisSpawnChance) return;\n\n  const block = blockAt(wave.dimension, x, terrainY, z);\n  if (!block || !block.typeId) return;\n\n  const supported = [\n    "minecraft:oak_log", "minecraft:spruce_log", "minecraft:birch_log",\n    "minecraft:jungle_log", "minecraft:acacia_log", "minecraft:dark_oak_log",\n    "minecraft:mangrove_log", "minecraft:cherry_log", "minecraft:oak_planks",\n    "minecraft:spruce_planks", "minecraft:birch_planks", "minecraft:jungle_planks",\n    "minecraft:acacia_planks", "minecraft:dark_oak_planks", "minecraft:mangrove_planks",\n    "minecraft:cherry_planks", "minecraft:dirt", "minecraft:grass_block",\n    "minecraft:sand", "minecraft:gravel", "minecraft:cobblestone",\n    "minecraft:stone", "minecraft:brick_block"\n  ];\n  if (!supported.includes(block.typeId)) return;\n\n  const debris = spawnDebris(\n    wave.dimension,\n    { x, y: terrainY + 1, z },\n    block.typeId,\n    wave.incoming,\n    cfg\n  );\n  if (debris) wave.debrisSpawned++;\n}\n\nfunction applyPlayerPhysics(wave) {
   if (!wave.player?.isValid || !wave.cfg.playerPhysics) return;
   const player = wave.player;
   const state = getPlayerWaterState(player);
