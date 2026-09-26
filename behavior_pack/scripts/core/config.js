@@ -23,6 +23,18 @@ export const TSUNAMI_CONFIG = {
     floodSpreadRadius: 18,
     maxFloodCellsPerTick: 90,
     maxWaterBlocksPerTick: 240,
-    allowWaterReplace: true
+    allowWaterReplace: true,
+    playerPhysics: true,
+    swimLevel: 1,
+    wadeLevel: 2,
+    drag: 0.18,
+    strongCurrentDrag: 0.32,
+    currentPull: 0.055,
+    maxCurrentSpeed: 0.75,
+    verticalBuoyancy: 0.045,
+    surfaceRecovery: 0.12,
+    sprintPenalty: 0.35,
+    underwaterPenalty: 0.55,
+    physicsTickInterval: 1
   }
 };
