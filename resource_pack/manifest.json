@@ -1,0 +1,13 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Tsunami Physics | Resources",
+    "description": "Resource foundation for Tsunami Physics.",
+    "uuid": "a8e4c2f7-3d61-4b9e-82a5-7f6c1d0b1104",
+    "version": [0,1,0],
+    "min_engine_version": [1,21,100]
+  },
+  "modules": [
+    {"type":"resources","uuid":"d7e1b3c5-9a24-4f6d-8c2b-6e5a0f1d1105","version":[0,1,0]}
+  ]
+}
